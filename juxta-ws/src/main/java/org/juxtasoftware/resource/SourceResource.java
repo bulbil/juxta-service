@@ -157,7 +157,14 @@ public class SourceResource extends BaseResource  {
             setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
             return toTextRepresentation("Missing source payload");
         }
+        // added from SourcesResource.java:164 -- suggestion from Juxta Developer Lou 
+        // to enable JSON in addition to multipart
         
+        if (MediaType.MULTIPART_FORM_DATA.equals(entity.getMediaType(), true)) {
+            return handleMutipartPost(entity);
+        } else if (MediaType.APPLICATION_JSON.equals(entity.getMediaType(), true)) {
+            return handleJsonPost(entity);
+        }
         // extract the input stream from the multipart request
         if (MediaType.MULTIPART_FORM_DATA.equals(entity.getMediaType(),true)) {
             InputStream srcInputStream = null;
